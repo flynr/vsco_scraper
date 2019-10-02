@@ -1,0 +1,25 @@
+README
+
+This script takes as input a VSCO profile username, and will fetch all of the user's full-resolution images. 
+Running and tested with Python 3. 
+Uses 'requests' and BeautifulSoup from 'bs4', you will need to pip install these. 
+You will need to have a folder called 'images' adjacent to the program in the directory from which you run it. All fetched images will be saved here. 
+Set the desired username in the 'targetUser' variable at the beginning of the script. 
+
+
+OVERVIEW:
+
+	-HTML for a profile page is retrieved
+	-BeautifulSoup extracts an object from one of the <scripts> called 'window.__PRELOADED_STATE__'.
+	-The main things needed from this object are the Authorization Token and site-ID that must be included in the XHR request for more images. 
+	-These are packed into a request, then sent to the vsco API. This request is asking for an arbitrarily large number of images, in the hope that all user's image IDs will be sent back in one go (Rather than batches of 30, as a web browser does when navigating to a new page of images).
+	-The response comes back and content put into a json object. (Lots of other metadata in here too, aside from the image IDs)
+	-Extract {ID : Link} from the object.
+	-For each one, fetch from the URL and download to the ./images folder
+
+
+ISSUES:
+
+	-No runtime errors/exceptions handled currently.
+	-No guarantee the Auth Token will be found. In earlier versions of working on this script, it used to be found in a JavaScript file, which was included in a <script> tag. (formerly named MEDIA_READ_TKN). No images can be fetched without this token.
+	-User-Agent is set in the Header for the main request. Not known whether this might need to be changed, or if VSCO API will limit requests because of it. 
